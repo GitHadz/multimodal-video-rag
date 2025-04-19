@@ -1,0 +1,4 @@
+# ignore generated data and indexes
+data/
+__pycache__/
+*.pyc

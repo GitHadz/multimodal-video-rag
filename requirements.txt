@@ -1,0 +1,14 @@
+faster-whisper==1.0.1
+sentence-transformers==2.7.0
+open_clip_torch==2.24.0
+faiss-cpu==1.7.4
+pgvector==0.2.5
+psycopg[binary]
+scikit-learn
+rank_bm25
+yt-dlp
+ffmpeg-python
+streamlit
+pandas
+pyyaml
+tqdm
