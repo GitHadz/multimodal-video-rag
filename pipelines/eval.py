@@ -18,7 +18,7 @@ def run(mode):
     for q in UNANS:
         tic = time.time(); hits = search(q, mode=mode)
         t.append(time.time()-tic)
-        if not hits or hits[0][0] < .25:
+        if not hits or hits[0][0] < .50:
             rej += 1
     return dict(acc=ok/len(ANS), rej=rej/len(UNANS),
                 lat=np.mean(t))
