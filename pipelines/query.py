@@ -15,7 +15,7 @@ chunks = [json.loads(l) for l in open(DATA/"chunks.jsonl")]
 
 # ---------- load embeddings & models -------------
 TXT_EMB = np.load(DATA/"stella.npy")
-enc      = SentenceTransformer("BAAI/bge-large-en-v1.5")
+enc      = SentenceTransformer("nomic-ai/nomic-embed-text-v1.5", trust_remote_code=True, device="cuda")
 bm25     = pickle.load(open(DATA/"bm25.pkl", "rb"))
 tfidf_vec= pickle.load(open(DATA/"tfidf.pkl", "rb"))
 

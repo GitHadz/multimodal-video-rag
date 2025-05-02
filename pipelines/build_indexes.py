@@ -29,9 +29,9 @@ if ONLY_PG or emb_path.exists():
     txt_emb = np.load(emb_path)
     print("🔤  Loaded existing text embeddings")
 else:
-    print("🔤  Encoding transcript with bge-large-en-v1.5 …")
-    enc = SentenceTransformer("BAAI/bge-large-en-v1.5")
-    txt_emb = enc.encode(texts, show_progress_bar=True, batch_size=64,
+    print("🔤  Encoding transcript with nomic-embed-text-v1.5 …")
+    enc = SentenceTransformer("nomic-ai/nomic-embed-text-v1.5", trust_remote_code=True, device="cuda")
+    txt_emb = enc.encode([f"search_document: {t}" for t in texts], show_progress_bar=True, batch_size=64,
                          normalize_embeddings=True)
     np.save(emb_path, txt_emb)
     print("✓ text embeddings saved")
@@ -88,15 +88,18 @@ fps    = meta["fps"]
 frames = sorted((DATA / "frames").glob("*.jpg"))
 print(f"🖼  Encoding {len(frames)} frames with OpenCLIP …")
 
-model, _, preprocess = open_clip.create_model_and_transforms("ViT-L-14", pretrained="openai")
-model.eval().to("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+model, _, preprocess = open_clip.create_model_and_transforms(
+    "ViT-L-14", pretrained="openai"
+)
+model = model.to(DEVICE).eval()           # make sure weights live on the chosen device
 
-BATCH = 256
+BATCH = 64
 emb_list = []
 for i in trange(0, len(frames), BATCH, desc="batches"):
     imgs = [preprocess(Image.open(p).convert("RGB")) for p in frames[i:i+BATCH]]
     with torch.no_grad():
-        emb = model.encode_image(torch.stack(imgs).to(model.device)).cpu().numpy()
+        emb = model.encode_image(torch.stack(imgs).to(DEVICE)).cpu().numpy()
     emb_list.append(emb)
 
 img_emb = np.concatenate(emb_list)
@@ -109,6 +112,7 @@ records = [
 with open(DATA / "clip.pkl", "wb") as f:
     pickle.dump(records, f)
 print("✓ image embeddings + timestamps saved")
+
 
 # ─────────────────────── lexical baselines ────────────────────────────
 print("📚  Building TF‑IDF & BM25 …")

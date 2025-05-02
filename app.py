@@ -33,10 +33,31 @@ if query:
 
 # ---------- chat history ----------
 for q, a in st.session_state.history[::-1]:
-    with st.chat_message("user"): st.markdown(q)
+    with st.chat_message("user"):
+        st.markdown(q)
+
     with st.chat_message("assistant"):
         st.markdown(a)
+
+        # ⏱-prefixed answers include a markdown bold timestamp **m:ss** or **h:mm:ss**
         if a.startswith("⏱"):
-            ts = int(a.split("**")[1].split("**")[0].split(":")[0])*60 + \
-                 int(a.split(":")[2].split("**")[0])
-            st.video(VIDEO_URL + f"&t={ts}s")
+            # pull the part between the first pair of ** **
+            ts_raw = a.split("**")[1]          # e.g. "2:19"  or  "00:02:19"
+            ts_raw = ts_raw.strip()
+
+            parts = ts_raw.split(":")          # ["2","19"]  or ["00","02","19"]
+
+            try:
+                if len(parts) == 3:            # hh : mm : ss
+                    h, m, s = map(int, parts)
+                    start_sec = h * 3600 + m * 60 + s
+                elif len(parts) == 2:          # mm : ss
+                    m, s = map(int, parts)
+                    start_sec = m * 60 + s
+                else:                          # just "ss"
+                    start_sec = int(parts[0])
+            except ValueError:
+                start_sec = 0                  # fallback if parsing fails
+
+            st.video(VIDEO_URL + f"&t={start_sec}s")
+

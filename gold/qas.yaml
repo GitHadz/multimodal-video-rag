@@ -1,0 +1,28 @@
+answerable:
+  - q: "What is Combinatorial Reconfiguration?"
+    ts: 191
+  - q: "What does the reconfiguration graph consist of?"
+    ts: 289
+  - q: "What is PSPACE?"
+    ts: 1076
+  - q: "Is Token Sliding considered PSPACE-complete or NP-complete?"
+    ts: 1300
+  - q: "How to parametrize Token Sliding and Token Jumping?"
+    ts: 1431
+  - q: "Is there a case where Token Sliding and Token Jumping are equivalent?"
+    ts: 1900
+  - q: "Did the speaker mention Graph Coloring?"
+    ts: 668
+  - q: "Does the video focus on Token Placement?"
+    ts: 737
+  - q: "What is the main focus of the video?"
+    ts: 0
+  - q: "What is the name of the speaker?"
+    ts: 0
+
+unanswerable:
+  - "Does the speaker mention reinforcement learning?"
+  - "How many layers does the Vision Transformer he shows have?"
+  - "What is the name of the dataset he uses?"
+  - "What is the name of the conference he is attending?"
+  - "Did the speaker solve the fifteen-puzzle-game?"
